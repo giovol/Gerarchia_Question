@@ -1,0 +1,4 @@
+3
+L inventore di Java e stato _James Gosling_
+La capitale d Italia e _Roma
+Il linguaggio creato da Guido van Rossum e _Python_

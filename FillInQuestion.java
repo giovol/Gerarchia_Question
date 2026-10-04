@@ -1,6 +1,13 @@
-/** Una domanda creata da una frase con una risposta racchiusa tra trattini bassi. */
+/**
+ * Una domanda creata da una frase con una risposta racchiusa tra trattini
+ * bassi.
+ */
 public class FillInQuestion extends Question {
-    /** Estrae la risposta racchiusa tra la prima coppia di trattini bassi. */
+    /**
+     * Estrae la risposta racchiusa tra la prima coppia di trattini bassi.
+     * 
+     * @param sentence La frase della domanda.
+     */
     public FillInQuestion(String sentence) {
         super(extractText(sentence), extractAnswer(sentence));
     }

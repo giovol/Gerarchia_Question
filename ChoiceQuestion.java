@@ -5,7 +5,15 @@ public class ChoiceQuestion extends Question {
     private String[] choices;
     private int correctChoiceIndex;
 
-    /** Crea una domanda a scelta singola usando un indice corretto a partire da zero. */
+    /**
+     * Crea una domanda a scelta singola usando un indice corretto a partire da
+     * zero.
+     * 
+     * @param text               Il testo della domanda.
+     * @param answer             Il testo della risposta esatta.
+     * @param choices            Array che contiene le scelte della domanda.
+     * @param correctChoiceIndex L'indice della risposta esatta.
+     */
     public ChoiceQuestion(String text, String answer, String[] choices, int correctChoiceIndex) {
         super(text, answer);
         if (choices == null || correctChoiceIndex < 0 || correctChoiceIndex >= choices.length) {
@@ -15,7 +23,11 @@ public class ChoiceQuestion extends Question {
         this.correctChoiceIndex = correctChoiceIndex;
     }
 
-    /** Crea una domanda a scelta inizialmente vuota. */
+    /**
+     * Crea una domanda a scelta inizialmente vuota.
+     * 
+     * @param text Il testo della domanda.
+     */
     public ChoiceQuestion(String text) {
         super(text, "");
         this.choices = new String[0];
@@ -27,8 +39,18 @@ public class ChoiceQuestion extends Question {
         return choices.clone();
     }
 
-    /** Aggiunge una scelta e la imposta come risposta se {@code correct} vale true. */
+    /**
+     * Aggiunge una scelta e la imposta come risposta se {@code correct} vale true.
+     * 
+     * @param choice  Il testo della scelta.
+     * @param correct {@code true} se è corretta, altrimenti {@code false}.
+     */
     public void addChoice(String choice, boolean correct) {
+        if (choice == null || choice.trim().length() < 2) {
+            throw new InvalidChoiceException(
+                    "La scelta non può essere null, vuota o inferiore a 2 caratteri (esclusi gli spazi).");
+        }
+
         choices = Arrays.copyOf(choices, choices.length + 1);
         choices[choices.length - 1] = choice;
         if (correct) {
@@ -45,28 +67,26 @@ public class ChoiceQuestion extends Question {
         }
     }
 
-    /** Verifica un numero di scelta a partire da uno. */
     @Override
-    public void checkAnswer(String userAnswer) {
+    public boolean checkAnswer(String userAnswer) {
         try {
             int userChoiceIndex = Integer.parseInt(userAnswer) - 1;
             if (userChoiceIndex >= 0 && userChoiceIndex < choices.length
                     && userChoiceIndex == correctChoiceIndex) {
-                System.out.println("Correct!");
+                return true;
             } else {
-                System.out.println("Incorrect. The correct answer is: " + getAnswer());
+                return false;
             }
         } catch (NumberFormatException | NullPointerException e) {
-            System.out.println("Invalid input. Please enter a number corresponding to your choice.");
+            throw new NumberFormatException("Invalid input. Please enter a number corresponding to your choice.");
         }
     }
-    /** Confronta anche le scelte, oltre ai valori ereditati. */
+
     @Override
     public boolean equals(Object obj) {
         return super.equals(obj) && Arrays.equals(choices, ((ChoiceQuestion) obj).choices);
     }
 
-    /** Restituisce un codice hash che include le scelte. */
     @Override
     public int hashCode() {
         return 31 * super.hashCode() + Arrays.hashCode(choices);
